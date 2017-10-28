@@ -12,6 +12,8 @@ const Markerito = function(data, map){
   this.id = UUID.generate()
 }
 
+
+var map;
 //hardcoded Locations
 let myLocations = [
           {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
@@ -23,29 +25,43 @@ let myLocations = [
 ];
 
 function initMap(){
-  const markers = [];
-  let map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 40.7413549, lng: -73.9980244},
           zoom: 13
         });
-  let largeInfoWindow = new google.maps.InfoWindow();
-  let bounds = new google.maps.LatLngBounds();
-    for (let i = 0; i < myLocations.length; i++){
-      markers.push(new google.maps.Marker(
-        new Markerito(myLocations[i], map)));
-    }
-  console.log(markers)
+  // let largeInfoWindow = new google.maps.InfoWindow();
+  // let bounds = new google.maps.LatLngBounds();
+  //   for (let i = 0; i < myLocations.length; i++){
+  //     markers.push(new google.maps.Marker(
+  //       new Markerito(myLocations[i], map)));
+  //   }
 }
 
 //ViewModel
 const ViewModel = function(){
 
   const self = this;
+  const markers = [];
+
+
+  //introduced timeout to wait till google is defined
+  if(typeof google != 'undefined'){
+    self.putMarkersAndLocations()
+    } else {
+    setTimeout(function(){
+      self.putMarkersAndLocations()
+    }, 500)
+  }
+
   self.locationsList = ko.observableArray([]);
 
-  myLocations.forEach(function(location){
-    self.locationsList.push( new Location(location))
-  })
+  self.putMarkersAndLocations = function(){
+    myLocations.forEach(function(location){
+      self.locationsList.push( new Location(location))
+      markers.push(new google.maps.Marker(
+        new Markerito(location, map)));
+    })
+  }
 
   self.selectLocation = function(){
     console.log("i got clicked")
