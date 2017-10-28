@@ -13,8 +13,8 @@ const Markerito = function(data, map){
 }
 
 
-var map;
-var largeInfoWindow;
+let map;
+let largeInfoWindow;
 //hardcoded Locations
 let myLocations = [
           {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
@@ -73,9 +73,7 @@ const ViewModel = function(){
 
   self.populateInfoWindow = function(marker, target){
 
-
       marker = markers.filter(markerito => markerito.title === marker.title)[0];
-
 
     if (largeInfoWindow.marker != marker){
       largeInfoWindow.marker = marker;

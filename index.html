@@ -55,8 +55,9 @@
   <div class="container">
       <div class="myListings">
         <h1>Find Your Favourite Places in Neighbourhood</h1>
+        <input id="filter" type="text" value="">
         <ul data-bind="foreach: $root.locationsList()">
-          <li data-bind="text: $data.title, click: $root.populateInfoWindow.bind(largeInfoWindow)">
+          <li data-bind="text: $data.title, click: $root.populateInfoWindow">
         </ul>
       </div>
       <div id="map"></div>
