@@ -71,6 +71,12 @@ const ViewModel = function(){
   }
 
   self.populateInfoWindow = function(marker, infoWindow){
+
+    if (infoWindow.target){
+      infoWindow = new google.maps.InfoWindow();
+      marker = markers.filter(markerito => markerito.title === marker.title)[0]
+    }
+
     if (infoWindow.marker != marker){
       infoWindow.marker = marker;
       infoWindow.setContent('<div>' + marker.title + '</div>');
@@ -81,11 +87,6 @@ const ViewModel = function(){
           });
     }
   }
-
-  self.selectLocation = function(){
-    console.log("i got clicked")
-  }
-
 }
 
 

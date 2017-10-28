@@ -56,7 +56,7 @@
       <div class="myListings">
         <h1>Find Your Favourite Places in Neighbourhood</h1>
         <ul data-bind="foreach: $root.locationsList()">
-          <li data-bind="text: $data.title, click: $root.selectLocation">
+          <li data-bind="text: $data.title, click: $root.populateInfoWindow">
         </ul>
       </div>
       <div id="map"></div>
