@@ -87,6 +87,17 @@ const ViewModel = function(){
     }
   }
 
+  self.searchLocation = ko.observable('');
+
+  self.filteredLocations = ko.computed(function(){
+    return ko.utils.arrayFilter(self.locationsList(), function(result){
+      return (
+        (self.searchLocation().length === 0 ||
+        result.title.toLowerCase().indexOf(self.searchLocation().toLowerCase()) > -1)
+      )
+    })
+  })
+
 }
 
 
