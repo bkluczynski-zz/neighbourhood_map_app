@@ -29,12 +29,6 @@ function initMap(){
           center: {lat: 40.7413549, lng: -73.9980244},
           zoom: 13
         });
-  // let largeInfoWindow = new google.maps.InfoWindow();
-  // let bounds = new google.maps.LatLngBounds();
-  //   for (let i = 0; i < myLocations.length; i++){
-  //     markers.push(new google.maps.Marker(
-  //       new Markerito(myLocations[i], map)));
-  //   }
 }
 
 //ViewModel
@@ -42,14 +36,19 @@ const ViewModel = function(){
 
   const self = this;
   const markers = [];
+  let largeInfoWindow;
+  let bounds;
+  let marker;
 
 
   //introduced timeout to wait till google is defined
   if(typeof google != 'undefined'){
     self.putMarkersAndLocations()
+    self.initializeLargeInfoAndBounds()
     } else {
     setTimeout(function(){
       self.putMarkersAndLocations()
+      self.initializeLargeInfoAndBounds()
     }, 500)
   }
 
@@ -58,9 +57,29 @@ const ViewModel = function(){
   self.putMarkersAndLocations = function(){
     myLocations.forEach(function(location){
       self.locationsList.push( new Location(location))
-      markers.push(new google.maps.Marker(
-        new Markerito(location, map)));
+      marker = new google.maps.Marker(new Markerito(location, map))
+      marker.addListener('click', function(){
+        self.populateInfoWindow(this, largeInfoWindow)
+      });
+      markers.push(marker);
     })
+  }
+
+  self.initializeLargeInfoAndBounds = function(){
+    largeInfoWindow = new google.maps.InfoWindow();
+    bounds = new google.maps.LatLngBounds();
+  }
+
+  self.populateInfoWindow = function(marker, infoWindow){
+    if (infoWindow.marker != marker){
+      infoWindow.marker = marker;
+      infoWindow.setContent('<div>' + marker.title + '</div>');
+          infoWindow.open(map, marker);
+          // Make sure the marker property is cleared if the infowindow is closed.
+          infoWindow.addListener('closeclick',function(){
+            infoWindow.setMarker = null;
+          });
+    }
   }
 
   self.selectLocation = function(){

@@ -49,6 +49,9 @@
     <title>Neighbourhood App</title>
 </head>
 <body>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe9ykA30J-jH9cRpt6G1xKOjj4nqQmomk&callback=initMap">
+    </script>
   <div class="container">
       <div class="myListings">
         <h1>Find Your Favourite Places in Neighbourhood</h1>
@@ -59,10 +62,9 @@
       <div id="map"></div>
     </div>
   <script src="bower_components/knockout/dist/knockout.js" type="text/javascript"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/simple-uuid/uuid.js"></script>
   <script src="js/app.js"></script>
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe9ykA30J-jH9cRpt6G1xKOjj4nqQmomk&callback=initMap">
-    </script>
+
 </body>
 </html>
