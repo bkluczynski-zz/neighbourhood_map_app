@@ -14,6 +14,7 @@ const Markerito = function(data, map){
 
 
 var map;
+var largeInfoWindow;
 //hardcoded Locations
 let myLocations = [
           {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
@@ -31,12 +32,12 @@ function initMap(){
         });
 }
 
+console.log("window", largeInfoWindow)
 //ViewModel
 const ViewModel = function(){
 
   const self = this;
   const markers = [];
-  let largeInfoWindow;
   let bounds;
   let marker;
 
@@ -70,24 +71,26 @@ const ViewModel = function(){
     bounds = new google.maps.LatLngBounds();
   }
 
-  self.populateInfoWindow = function(marker, infoWindow){
+  self.populateInfoWindow = function(marker, target){
 
-    if (infoWindow.target){
-      infoWindow = new google.maps.InfoWindow();
-      marker = markers.filter(markerito => markerito.title === marker.title)[0]
-    }
 
-    if (infoWindow.marker != marker){
-      infoWindow.marker = marker;
-      infoWindow.setContent('<div>' + marker.title + '</div>');
-          infoWindow.open(map, marker);
+      marker = markers.filter(markerito => markerito.title === marker.title)[0];
+
+
+    if (largeInfoWindow.marker != marker){
+      largeInfoWindow.marker = marker;
+      largeInfoWindow.setContent('<div>' + marker.title + '</div>');
+          largeInfoWindow.open(map, marker);
           // Make sure the marker property is cleared if the infowindow is closed.
-          infoWindow.addListener('closeclick',function(){
-            infoWindow.setMarker = null;
+          largeInfoWindow.addListener('closeclick',function(){
+            largeInfoWindow.setMarker = null;
           });
+
     }
   }
+
 }
+
 
 
 ko.applyBindings(new ViewModel())
