@@ -69,6 +69,8 @@ function initMap() {
 const ViewModel = function() {
 
     const self = this;
+    const baseUrl = "http://en.wikipedia.org/w/api.php?&origin=*&action=query&prop=extracts&format=json&exintro=&titles=";
+
     let bounds;
     let marker;
 
@@ -122,7 +124,7 @@ const ViewModel = function() {
     self.populateInfoWindow = function(marker, target) {
         debugger;
         marker = self.markers().filter(markerito => markerito.title === marker.title)[0];
-
+        self.getWikipediaDescription(marker)
         if (largeInfoWindow.marker != marker) {
             largeInfoWindow.marker = marker;
             largeInfoWindow.setContent('<div>' + marker.title + '</div>');
@@ -134,11 +136,32 @@ const ViewModel = function() {
         }
     }
 
+    self.getWikipediaDescription = function(location){
+      debugger;
+      let completeURL = baseUrl + location.title
+      fetch(completeURL, {
+        header: {
+    'Access-Control-Allow-Origin':'*',
+  }}
+).then(function(response){
+          if (response.status !== 200) {
+            console.log("something went wrong. Status code: " + response.status);
+            return;
+          }
+
+          response.json().then(function(data){
+            console.log(data);
+          })
+
+        })
+        .catch(function(err){
+          console.log('Fetch Error', err)
+        })
+    }
     self.searchLocation = ko.observable('');
 
     self.filteredLocations = ko.computed(function() {
       return  ko.utils.arrayFilter(self.locationsList(), function(result) {
-          console.log(result)
           self.filterMarkers(result)
           return  ((self.searchLocation().length === 0 || result.title.toLowerCase().indexOf(self.searchLocation().toLowerCase()) > -1))
         })
