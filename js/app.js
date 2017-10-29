@@ -120,7 +120,7 @@ const ViewModel = function() {
     }
 
     self.populateInfoWindow = function(marker, target) {
-
+        debugger;
         marker = self.markers().filter(markerito => markerito.title === marker.title)[0];
 
         if (largeInfoWindow.marker != marker) {
@@ -129,7 +129,7 @@ const ViewModel = function() {
             largeInfoWindow.open(map, marker);
             // Make sure the marker property is cleared if the infowindow is closed.
             largeInfoWindow.addListener('closeclick', function() {
-                largeInfoWindow.setMarker = null;
+                largeInfoWindow.marker = null;
             });
         }
     }
