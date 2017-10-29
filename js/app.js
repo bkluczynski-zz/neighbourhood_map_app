@@ -124,10 +124,9 @@ const ViewModel = function() {
     self.populateInfoWindow = function(marker, target) {
         debugger;
         marker = self.markers().filter(markerito => markerito.title === marker.title)[0];
-        self.getWikipediaDescription(marker)
         if (largeInfoWindow.marker != marker) {
             largeInfoWindow.marker = marker;
-            largeInfoWindow.setContent('<div>' + marker.title + '</div>');
+            self.getWikipediaDescription(marker)
             largeInfoWindow.open(map, marker);
             // Make sure the marker property is cleared if the infowindow is closed.
             largeInfoWindow.addListener('closeclick', function() {
@@ -135,22 +134,28 @@ const ViewModel = function() {
             });
         }
     }
-
     self.getWikipediaDescription = function(location){
       debugger;
       let completeURL = baseUrl + location.title
       fetch(completeURL, {
         header: {
     'Access-Control-Allow-Origin':'*',
-  }}
-).then(function(response){
+    }}
+  ).then(function(response){
           if (response.status !== 200) {
             console.log("something went wrong. Status code: " + response.status);
             return;
           }
-
           response.json().then(function(data){
-            console.log(data);
+            let dataObj = data.query.pages;
+            let id = Object.keys(dataObj).join();
+            let extract = dataObj[id].extract;
+            let innerHTML = '<div>';
+            innerHTML += '<strong>' + dataObj[id].title + '</strong>';
+            innerHTML += extract;
+            largeInfoWindow.setContent(innerHTML)
+            console.log(innerHTML);
+
           })
 
         })
