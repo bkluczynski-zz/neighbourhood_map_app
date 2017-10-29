@@ -89,6 +89,8 @@ const ViewModel = function() {
 
     self.markers = ko.observableArray([])
     self.locationsList = ko.observableArray([]);
+    self.searchLocation = ko.observable('');
+
 
     self.putLocations = function() {
         myLocations.forEach(function(location) {
@@ -117,7 +119,6 @@ const ViewModel = function() {
     }
 
     self.parseJsonAndDisplay = function(data, innerHTML, location) {
-        debugger;
         let dataObj = data.query.pages;
         let id = Object.keys(dataObj).join();
         let extract = dataObj[id].extract === undefined
@@ -154,8 +155,9 @@ const ViewModel = function() {
         }
     }
 
-    self.handleError = function(location, innerHTML) {
+    self.handleError = function(location, innerHTML, err) {
         innerHTML += '<strong>' + location.title + '</strong>' + " Could not get description from Wikipedia. Try again later"
+        innerHTML += err ? 'error code: ' + err : '';
         self.displayInfoWindow(innerHTML, location)
     }
 
@@ -175,14 +177,12 @@ const ViewModel = function() {
             response.json().then(function(data) {
                 self.parseJsonAndDisplay(data, innerHTML, location)
             }).catch(function(err) {
-                self.handleError(location, innerHTML)
+                self.handleError(location, innerHTML, err)
             })
         }).catch(function(err) {
-            self.handleError(location, innerHTML)
+            self.handleError(location, innerHTML, err)
         })
     }
-    self.searchLocation = ko.observable('');
-
     self.filteredLocations = ko.computed(function() {
         return ko.utils.arrayFilter(self.locationsList(), function(result) {
             self.filterMarkers(result)
