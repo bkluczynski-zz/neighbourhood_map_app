@@ -98,6 +98,16 @@ const ViewModel = function() {
         })
     }
 
+    self.toggleBounce = function(marker){
+      self.markers().forEach(function(item){
+        if (item.getAnimation() !== null) {
+          item.setAnimation(null);
+        }
+          })
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+
+
     self.putMarkersDown = function() {
         self.locationsList().forEach(function(location) {
             marker = new google.maps.Marker(new Markerito(location, map))
@@ -130,6 +140,7 @@ const ViewModel = function() {
     self.displayHTML = function(innerHTML, dataObj, id, extract, location) {
         innerHTML += '<strong>' + dataObj[id].title + '</strong>';
         innerHTML += extract;
+        innerHTML += '<em> credit to Wikipedia</em>';
         self.displayInfoWindow(innerHTML,location)
     }
 
@@ -147,10 +158,12 @@ const ViewModel = function() {
         marker = self.markers().filter(markerito => markerito.title === marker.title)[0];
         if (largeInfoWindow.marker != marker) {
             largeInfoWindow.marker = marker;
+            self.toggleBounce(marker)
             self.openInfoBox(marker)
             // Make sure the marker property is cleared if the infowindow is closed.
             largeInfoWindow.addListener('closeclick', function() {
                 largeInfoWindow.marker = null;
+                marker.setAnimation(null);
             });
         }
     }
