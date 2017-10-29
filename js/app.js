@@ -96,24 +96,24 @@ const ViewModel = function() {
         })
     }
 
-    self.putMarkersDown = function(){
-      self.locationsList().forEach(function(location){
-        marker = new google.maps.Marker(new Markerito(location, map))
-        marker.addListener('click', function() {
-            self.populateInfoWindow(this, largeInfoWindow)
-        });
-        self.markers.push(marker);
-      })
+    self.putMarkersDown = function() {
+        self.locationsList().forEach(function(location) {
+            marker = new google.maps.Marker(new Markerito(location, map))
+            marker.addListener('click', function() {
+                self.populateInfoWindow(this, largeInfoWindow)
+            });
+            self.markers.push(marker);
+        })
     }
 
-    self.filterMarkers = function(){
-      for (let i = 0; i < self.markers().length; i++){
-        if ((self.markers()[i].title.toLowerCase().indexOf(self.searchLocation().toLowerCase()) > -1) || (self.searchLocation().length === 0)){
-          self.markers()[i].setVisible(true)
-        } else {
-          self.markers()[i].setVisible(false)
+    self.filterMarkers = function() {
+        for (let i = 0; i < self.markers().length; i++) {
+            if ((self.markers()[i].title.toLowerCase().indexOf(self.searchLocation().toLowerCase()) > -1) || (self.searchLocation().length === 0)) {
+                self.markers()[i].setVisible(true)
+            } else {
+                self.markers()[i].setVisible(false)
+            }
         }
-      }
     }
 
     self.initializeLargeInfoAndBounds = function() {
@@ -126,49 +126,46 @@ const ViewModel = function() {
         marker = self.markers().filter(markerito => markerito.title === marker.title)[0];
         if (largeInfoWindow.marker != marker) {
             largeInfoWindow.marker = marker;
-            self.getWikipediaDescription(marker)
-            largeInfoWindow.open(map, marker);
+            self.openInfoBox(marker)
             // Make sure the marker property is cleared if the infowindow is closed.
             largeInfoWindow.addListener('closeclick', function() {
                 largeInfoWindow.marker = null;
             });
         }
     }
-    self.getWikipediaDescription = function(location){
-      debugger;
-      let completeURL = baseUrl + location.title
-      fetch(completeURL, {
-        header: {
-    'Access-Control-Allow-Origin':'*',
-    }}
-  ).then(function(response){
-          if (response.status !== 200) {
-            console.log("something went wrong. Status code: " + response.status);
-            return;
-          }
-          response.json().then(function(data){
-            let dataObj = data.query.pages;
-            let id = Object.keys(dataObj).join();
-            let extract = dataObj[id].extract;
-            let innerHTML = '<div>';
-            innerHTML += '<strong>' + dataObj[id].title + '</strong>';
-            innerHTML += extract;
-            largeInfoWindow.setContent(innerHTML)
-            console.log(innerHTML);
+    self.openInfoBox = function(location) {
+        debugger;
+        let completeURL = baseUrl + location.title
+        fetch(completeURL, {
+            header: {
+                'Access-Control-Allow-Origin': '*'
+            }
+        }).then(function(response) {
+            if (response.status !== 200) {
+                console.log("something went wrong. Status code: " + response.status);
+                return;
+            }
+            response.json().then(function(data) {
+                let dataObj = data.query.pages;
+                let id = Object.keys(dataObj).join();
+                let extract = dataObj[id].extract;
+                let innerHTML = '<div>';
+                innerHTML += '<strong>' + dataObj[id].title + '</strong>';
+                innerHTML += extract;
+                largeInfoWindow.setContent(innerHTML)
+                largeInfoWindow.open(map, location)
+            })
 
-          })
-
-        })
-        .catch(function(err){
-          console.log('Fetch Error', err)
+        }).catch(function(err) {
+            console.log('Fetch Error', err)
         })
     }
     self.searchLocation = ko.observable('');
 
     self.filteredLocations = ko.computed(function() {
-      return  ko.utils.arrayFilter(self.locationsList(), function(result) {
-          self.filterMarkers(result)
-          return  ((self.searchLocation().length === 0 || result.title.toLowerCase().indexOf(self.searchLocation().toLowerCase()) > -1))
+        return ko.utils.arrayFilter(self.locationsList(), function(result) {
+            self.filterMarkers(result)
+            return ((self.searchLocation().length === 0 || result.title.toLowerCase().indexOf(self.searchLocation().toLowerCase()) > -1))
         })
     })
 
