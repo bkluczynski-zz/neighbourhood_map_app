@@ -13,7 +13,6 @@ const Markerito = function(data, map) {
 }
 
 let map;
-let largeInfoWindow;
 //hardcoded Locations
 let myLocations = [
     {
@@ -73,6 +72,7 @@ const ViewModel = function() {
 
     let bounds;
     let marker;
+    let largeInfoWindow;
 
     //introduced timeout to wait till google is defined
     if (typeof google != 'undefined') {
@@ -116,13 +116,33 @@ const ViewModel = function() {
         }
     }
 
+    self.parseJsonAndDisplay = function(data, innerHTML, location) {
+        debugger;
+        let dataObj = data.query.pages;
+        let id = Object.keys(dataObj).join();
+        let extract = dataObj[id].extract === undefined
+            ? ' Sorry, there is no available results for this place in Wikipedia'
+            : dataObj[id].extract;
+        self.displayHTML(innerHTML, dataObj, id, extract, location);
+    }
+
+    self.displayHTML = function(innerHTML, dataObj, id, extract, location) {
+        innerHTML += '<strong>' + dataObj[id].title + '</strong>';
+        innerHTML += extract;
+        self.displayInfoWindow(innerHTML,location)
+    }
+
     self.initializeLargeInfoAndBounds = function() {
         largeInfoWindow = new google.maps.InfoWindow();
         bounds = new google.maps.LatLngBounds();
     }
 
+    self.displayInfoWindow = function(innerHTML, location){
+      largeInfoWindow.setContent(innerHTML)
+      largeInfoWindow.open(map, location)
+    }
+
     self.populateInfoWindow = function(marker, target) {
-        debugger;
         marker = self.markers().filter(markerito => markerito.title === marker.title)[0];
         if (largeInfoWindow.marker != marker) {
             largeInfoWindow.marker = marker;
@@ -133,8 +153,14 @@ const ViewModel = function() {
             });
         }
     }
+
+    self.handleError = function(location, innerHTML) {
+        innerHTML += '<strong>' + location.title + '</strong>' + " Could not get description from Wikipedia. Try again later"
+        self.displayInfoWindow(innerHTML, location)
+    }
+
     self.openInfoBox = function(location) {
-        debugger;
+        let innerHTML = '<div>';
         let completeURL = baseUrl + location.title
         fetch(completeURL, {
             header: {
@@ -142,22 +168,17 @@ const ViewModel = function() {
             }
         }).then(function(response) {
             if (response.status !== 200) {
-                console.log("something went wrong. Status code: " + response.status);
+                //needs to abstract this to a separate function
+                self.handleError(location, innerHTML)
                 return;
             }
             response.json().then(function(data) {
-                let dataObj = data.query.pages;
-                let id = Object.keys(dataObj).join();
-                let extract = dataObj[id].extract;
-                let innerHTML = '<div>';
-                innerHTML += '<strong>' + dataObj[id].title + '</strong>';
-                innerHTML += extract;
-                largeInfoWindow.setContent(innerHTML)
-                largeInfoWindow.open(map, location)
+                self.parseJsonAndDisplay(data, innerHTML, location)
+            }).catch(function(err) {
+                self.handleError(location, innerHTML)
             })
-
         }).catch(function(err) {
-            console.log('Fetch Error', err)
+            self.handleError(location, innerHTML)
         })
     }
     self.searchLocation = ko.observable('');
