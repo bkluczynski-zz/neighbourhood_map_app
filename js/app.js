@@ -17,40 +17,40 @@ let largeInfoWindow;
 //hardcoded Locations
 let myLocations = [
     {
-        title: 'Park Ave Penthouse',
+        title: 'Arcola Theatre',
         location: {
-            lat: 40.7713024,
-            lng: -73.9632393
+            lat: 51.546915,
+            lng: -0.075005
         }
     }, {
-        title: 'Chelsea Loft',
+        title: 'Dalston Junction railway station',
         location: {
-            lat: 40.7444883,
-            lng: -73.9949465
+            lat: 51.546129,
+            lng: -0.07512
         }
     }, {
-        title: 'Union Square Open Floor Plan',
+        title: 'London Fields',
         location: {
-            lat: 40.7347062,
-            lng: -73.9895759
+            lat: 51.54092244,
+            lng: -0.0601511
         }
     }, {
-        title: 'East Village Hip Studio',
+        title: 'Dalston Kingsland railway station',
         location: {
-            lat: 40.7281777,
-            lng: -73.984377
+            lat: 51.5481561,
+            lng: -0.0756712
         }
     }, {
-        title: 'TriBeCa Artsy Bachelor Pad',
+        title: 'Argos Shop',
         location: {
-            lat: 40.7195264,
-            lng: -74.0089934
+            lat: 51.5499028,
+            lng: -0.0743401
         }
     }, {
-        title: 'Chinatown Homey Space',
+        title: 'Hackney Downs School',
         location: {
-            lat: 40.7180628,
-            lng: -73.9961237
+            lat: 51.5527081,
+            lng: -0.060567
         }
     }
 ];
@@ -58,10 +58,10 @@ let myLocations = [
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: 40.7413549,
-            lng: -73.9980244
+            lat: 51.5478976,
+            lng: -0.0784964
         },
-        zoom: 13
+        zoom: 14
     });
 }
 
