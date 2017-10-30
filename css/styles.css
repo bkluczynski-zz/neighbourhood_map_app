@@ -15,14 +15,9 @@ body {
 
 input {
   font-size: 14px;
-  width:100%;
-}
-
-h1 {
-  color: #525454;
-  font-size: 22px;
-  margin: 0 0 10px 0;
-  text-align: center;
+  width:80%;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 #map {
@@ -33,21 +28,37 @@ h1 {
 
 .map-container {
   display: flex;
-  width: 70%;
+  width: 75%;
   justify-content: center;
 }
 
 .list-container {
   display: flex;
-  width: 30%;
+  width: 25%;
   flex-direction: column;
   justify-content: center;
 }
 
 .myListings {
-  background: #fff;
+  background: black;
   height: 100%;
   line-height: 35px;
   text-align: left;
   width: 100%;
+}
+
+.list {
+  padding:10px;
+  color: darkgrey;
+}
+
+ul li:hover,ul li.active{
+  color: white;
+}
+
+.title{
+  padding:10px;
+  width:100%;
+  text-align: left;
+  color: darkgrey;
 }
