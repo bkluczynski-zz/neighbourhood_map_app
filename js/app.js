@@ -85,7 +85,7 @@ const ViewModel = function() {
             self.putLocations();
             self.putMarkersDown();
             self.initializeLargeInfoAndBounds();
-        }, 500)
+        }, 1000)
     }
 
     //markers list being an observable array
