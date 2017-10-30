@@ -110,6 +110,7 @@ const ViewModel = function() {
 
     self.toggleList = function(){
       self.shouldShowList(!self.shouldShowList())
+
     }
 
     self.shouldShowList = ko.observable(true);
@@ -203,7 +204,8 @@ const ViewModel = function() {
 
     self.openInfoBox = function(location) {
         let innerHTML = '<div>';
-        let completeURL = baseUrl + location.title
+        let numberOfSentences = '&exsentences=2'
+        let completeURL = baseUrl + location.title + numberOfSentences;
         fetch(completeURL, {
             header: {
                 'Access-Control-Allow-Origin': '*'
