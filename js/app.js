@@ -107,6 +107,12 @@ const ViewModel = function() {
             self.locationsList.push(new Location(location))
         })
     }
+
+    self.toggleList = function(){
+      self.shouldShowList(!self.shouldShowList())
+    }
+
+    self.shouldShowList = ko.observable(true);
     //make a marker bounce when selected either on the list or directly by clicking on the marker
     self.toggleBounce = function(marker){
       self.markers().forEach(function(item){

@@ -80,18 +80,16 @@ ul li:hover,ul li.active{
   cursor:pointer;
   outline:none;
   z-index:100000000;
-  display:none;
 }
 
 @media screen and (min-width: 400px) and (max-width: 870px) {
+
   .list-container {
-    display:none;
-  }
-  .map-container {
-    width:100%;
+    width: 400px;
   }
 
-  .hamburger {
-    display:block;
+  .map-container {
+    width:100% !important;
   }
+
 }
