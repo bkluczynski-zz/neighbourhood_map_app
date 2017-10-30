@@ -12,7 +12,9 @@
     <div class="list-container">
       <div class="myListings">
         <h1 class="title">Bart's places</h1>
-        <input data-bind="value: $root.searchLocation, valueUpdate: 'afterkeydown' "id="filter" type="text" value="" placeholder="For example, Arcola...">
+        <div class="input-wrapper">
+        <input data-bind="value: $root.searchLocation, valueUpdate: 'afterkeydown' "id="filter" type="text" value="" placeholder="For example, Arcola..."/>
+        </div>
         <ul class="list" style="list-style: none" data-bind="foreach: $root.filteredLocations">
           <li data-bind="text: $data.title, click: $root.populateInfoWindow">
         </ul>
