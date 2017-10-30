@@ -41,6 +41,7 @@ let myLocations = [
             lng: -0.0756712
         }
     }, {
+      //example of location which does not produce any results in Wikipedia
         title: 'Argos Shop',
         location: {
             lat: 51.5499028,
@@ -63,6 +64,11 @@ function initMap() {
         },
         zoom: 14
     });
+    google.maps.event.addDomListener(window, "resize", function() {
+   let center = map.getCenter();
+   google.maps.event.trigger(map, "resize");
+   map.setCenter(center);
+  })
 }
 
 //ViewModel
