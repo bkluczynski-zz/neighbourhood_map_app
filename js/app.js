@@ -138,7 +138,7 @@ const ViewModel = function() {
         let dataObj = data.query.pages;
         let id = Object.keys(dataObj).join();
         //in case dataObj is undefined (when wiki does not find any info about location) output the generic message
-        let extract = dataObj[id].extract === undefined
+        let extract = dataObj[id].extract === undefined || dataObj[id].extract === ""
             ? ' Sorry, there is no available results for this place in Wikipedia'
             : dataObj[id].extract;
         //displayHTMLOfExtract
