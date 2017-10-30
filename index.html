@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,30 +8,31 @@
     <link rel="stylesheet" href="css/styles.css">
     <title>Neighbourhood App</title>
 </head>
+
 <body>
-  <div class="container">
-    <div data-bind="visible: $root.shouldShowList"class="list-container">
-      <div class="myListings">
-        <h1 class="title">Bart's places</h1>
-        <div class="input-wrapper">
-        <input data-bind="value: $root.searchLocation, valueUpdate: 'afterkeydown' "id="filter" type="text" value="" placeholder="For example, Arcola..."/>
+    <div class="container">
+        <div data-bind="visible: $root.shouldShowList" class="list-container">
+            <div class="myListings">
+                <h1 class="title">Bart's places</h1>
+                <div class="input-wrapper">
+                    <input data-bind="value: $root.searchLocation, valueUpdate: 'afterkeydown' " id="filter" type="text" value="" placeholder="For example, Arcola..." />
+                </div>
+                <ul class="list" style="list-style: none" data-bind="foreach: $root.filteredLocations">
+                    <li data-bind="text: $data.title, click: $root.populateInfoWindow">
+                </ul>
+            </div>
         </div>
-        <ul class="list" style="list-style: none" data-bind="foreach: $root.filteredLocations">
-          <li data-bind="text: $data.title, click: $root.populateInfoWindow">
-        </ul>
-      </div>
+        <div data-bind="style: { width: !$root.shouldShowList() ? '100%' : '75%' }" class="map-container">
+            <button data-bind="click: $root.toggleList " class="hamburger">&#9776;</button>
+            <div id="map"></div>
+        </div>
     </div>
-    <div data-bind="style: { width: !$root.shouldShowList() ? '100%' : '75%' }" class="map-container">
-      <button data-bind="click: $root.toggleList "class="hamburger">&#9776;</button>
-      <div style="width:100%;height:100%;"id="map"></div>
-    </div>
-  </div>
-  <script src="bower_components/knockout/dist/knockout.js" type="text/javascript"></script>
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="bower_components/simple-uuid/uuid.js"></script>
-  <script src="js/app.js"></script>
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe9ykA30J-jH9cRpt6G1xKOjj4nqQmomk&callback=initMap">
+    <script src="bower_components/knockout/dist/knockout.js" type="text/javascript"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/simple-uuid/uuid.js"></script>
+    <script src="js/app.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe9ykA30J-jH9cRpt6G1xKOjj4nqQmomk&callback=initMap">
     </script>
 </body>
+
 </html>

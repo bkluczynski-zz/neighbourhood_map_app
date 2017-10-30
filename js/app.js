@@ -110,7 +110,9 @@ const ViewModel = function() {
 
     self.toggleList = function(){
       self.shouldShowList(!self.shouldShowList())
-
+      //resizing the map after changing window size
+      google.maps.event.trigger(map, 'resize');
+      map.setZoom( map.getZoom() );
     }
 
     self.shouldShowList = ko.observable(true);
