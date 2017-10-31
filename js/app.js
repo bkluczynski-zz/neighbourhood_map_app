@@ -1,17 +1,19 @@
+/*jshint esversion: 6 */
+
 //class of Location initialized with title and location
 const Location = function(data) {
     this.title = data.title;
     this.location = data.location;
-}
+};
 
 //class of Marker
 const Markerito = function(data, map) {
-    this.map = map,
-    this.position = data.location,
-    this.title = data.title,
-    this.animation = google.maps.Animation.DROP,
-    this.id = UUID.generate()
-}
+    this.map = map;
+    this.position = data.location;
+    this.title = data.title;
+    this.animation = google.maps.Animation.DROP;
+    this.id = UUID.generate();
+};
 
 let map;
 //hardcoded Locations - can be changed into API to an external DB
@@ -68,7 +70,7 @@ function initMap() {
    let center = map.getCenter();
    google.maps.event.trigger(map, "resize");
    map.setCenter(center);
-  })
+ });
 }
 
 //ViewModel
@@ -91,11 +93,11 @@ const ViewModel = function() {
             self.putLocations();
             self.putMarkersDown();
             self.initializeLargeInfoAndBounds();
-        }, 1000)
+        }, 1000);
     }
 
     //markers list being an observable array
-    self.markers = ko.observableArray([])
+    self.markers = ko.observableArray([]);
     //location list being an observable array
     self.locationsList = ko.observableArray([]);
     //search input being an observable
@@ -104,16 +106,16 @@ const ViewModel = function() {
     //display myLocations in the list
     self.putLocations = function() {
         myLocations.forEach(function(location) {
-            self.locationsList.push(new Location(location))
-        })
-    }
+            self.locationsList.push(new Location(location));
+        });
+    };
 
     self.toggleList = function(){
-      self.shouldShowList(!self.shouldShowList())
+      self.shouldShowList(!self.shouldShowList());
       //resizing the map after changing window size
       google.maps.event.trigger(map, 'resize');
       map.setZoom( map.getZoom() );
-    }
+    };
 
     self.shouldShowList = ko.observable(true);
     //make a marker bounce when selected either on the list or directly by clicking on the marker
@@ -123,62 +125,60 @@ const ViewModel = function() {
         if (item.getAnimation() !== null) {
           item.setAnimation(null);
         }
-          })
+      });
           marker.setAnimation(google.maps.Animation.BOUNCE);
-        }
+        };
 
     //display markers on the map
     self.putMarkersDown = function() {
         self.locationsList().forEach(function(location) {
-            marker = new google.maps.Marker(new Markerito(location, map))
+            marker = new google.maps.Marker(new Markerito(location, map));
             marker.addListener('click', function() {
-                self.populateInfoWindow(this, largeInfoWindow)
+                self.populateInfoWindow(this, largeInfoWindow);
             });
             self.markers.push(marker);
-        })
-    }
+        });
+    };
 
     //filter markers having a part of their location.title matching filter query
     self.filterMarkers = function() {
         for (let i = 0; i < self.markers().length; i++) {
             if ((self.markers()[i].title.toLowerCase().indexOf(self.searchLocation().toLowerCase()) > -1) || (self.searchLocation().length === 0)) {
-                self.markers()[i].setVisible(true)
+                self.markers()[i].setVisible(true);
             } else {
-                self.markers()[i].setVisible(false)
+                self.markers()[i].setVisible(false);
             }
         }
-    }
+    };
     //get JSON and parse it into extract and id
     self.parseJsonAndDisplay = function(data, innerHTML, location) {
         let dataObj = data.query.pages;
         let id = Object.keys(dataObj).join();
         //in case dataObj is undefined (when wiki does not find any info about location) output the generic message
-        let extract = dataObj[id].extract === undefined || dataObj[id].extract === ""
-            ? ' Sorry, there is no available results for this place in Wikipedia'
-            : dataObj[id].extract;
+        let extract = dataObj[id].extract === undefined || dataObj[id].extract === "" ? ' Sorry, there is no available results for this place in Wikipedia' : dataObj[id].extract;
         //displayHTMLOfExtract
         self.displayHTML(innerHTML, dataObj, id, extract, location);
-    }
+    };
 
     self.displayHTML = function(innerHTML, dataObj, id, extract, location) {
         innerHTML += '<strong>' + dataObj[id].title + '</strong>';
         innerHTML += extract;
         innerHTML += '<em> credit to Wikipedia</em>';
         //display infoWindow
-        self.displayInfoWindow(innerHTML,location)
-    }
+        self.displayInfoWindow(innerHTML,location);
+    };
 
     //initialize largeInfoWindow and bounds
     self.initializeLargeInfoAndBounds = function() {
         largeInfoWindow = new google.maps.InfoWindow();
         bounds = new google.maps.LatLngBounds();
-    }
+    };
 
     //set content of infoWindow to whatever HTML is passed
     self.displayInfoWindow = function(innerHTML, location){
-      largeInfoWindow.setContent(innerHTML)
-      largeInfoWindow.open(map, location)
-    }
+      largeInfoWindow.setContent(innerHTML);
+      largeInfoWindow.open(map, location);
+    };
 
     self.populateInfoWindow = function(marker, target) {
         //get the real marker
@@ -187,26 +187,26 @@ const ViewModel = function() {
         if (largeInfoWindow.marker != marker) {
             largeInfoWindow.marker = marker;
             //animate the marker
-            self.toggleBounce(marker)
+            self.toggleBounce(marker);
             //open infoWindow with Wikipedia extract
-            self.openInfoBox(marker)
+            self.openInfoBox(marker);
             // Make sure the marker and animation property is cleared if the infowindow is closed.
             largeInfoWindow.addListener('closeclick', function() {
                 largeInfoWindow.marker = null;
                 marker.setAnimation(null);
             });
         }
-    }
+    };
     //handle error if request fails for any reason
     self.handleError = function(location, innerHTML, err) {
-        innerHTML += '<strong>' + location.title + '</strong>' + " Could not get description from Wikipedia. Try again later"
+        innerHTML += '<strong>' + location.title + '</strong>' + " Could not get description from Wikipedia. Try again later";
         innerHTML += err ? 'error code: ' + err : '';
-        self.displayInfoWindow(innerHTML, location)
-    }
+        self.displayInfoWindow(innerHTML, location);
+    };
 
     self.openInfoBox = function(location) {
         let innerHTML = '<div>';
-        let numberOfSentences = '&exsentences=2'
+        let numberOfSentences = '&exsentences=2';
         let completeURL = baseUrl + location.title + numberOfSentences;
         fetch(completeURL, {
             header: {
@@ -215,27 +215,27 @@ const ViewModel = function() {
         }).then(function(response) {
             if (response.status !== 200) {
                 //needs to abstract this to a separate function
-                self.handleError(location, innerHTML)
+                self.handleError(location, innerHTML);
                 return;
             }
             response.json().then(function(data) {
-                self.parseJsonAndDisplay(data, innerHTML, location)
+                self.parseJsonAndDisplay(data, innerHTML, location);
             }).catch(function(err) {
-                self.handleError(location, innerHTML, err)
-            })
+                self.handleError(location, innerHTML, err);
+            });
         }).catch(function(err) {
-            self.handleError(location, innerHTML, err)
-        })
-    }
+            self.handleError(location, innerHTML, err);
+        });
+    };
 
     //filter locations in the list using ko.computed and utils.arrayFilter
     self.filteredLocations = ko.computed(function() {
         return ko.utils.arrayFilter(self.locationsList(), function(result) {
-            self.filterMarkers(result)
-            return ((self.searchLocation().length === 0 || result.title.toLowerCase().indexOf(self.searchLocation().toLowerCase()) > -1))
-        })
-    })
+            self.filterMarkers(result);
+            return ((self.searchLocation().length === 0 || result.title.toLowerCase().indexOf(self.searchLocation().toLowerCase()) > -1));
+        });
+    });
 
-}
+};
 
-ko.applyBindings(new ViewModel())
+ko.applyBindings(new ViewModel());
