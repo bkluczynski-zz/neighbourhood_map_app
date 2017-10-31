@@ -73,6 +73,15 @@ function initMap() {
  });
 }
 
+/**
+ * Error callback for GMap API request
+ */
+function handleMapError(){
+    var message = "Something went wrong and Google Map could not be loaded. Please check the JavaScript console to find out about details";
+    alert(message);
+  // Error handling
+}
+
 //ViewModel
 const ViewModel = function() {
 
